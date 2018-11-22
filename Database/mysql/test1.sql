@@ -40,4 +40,8 @@ update students set gender=2 where id=1;
 
 select * from students where name='li';
 
-select name as 姓名 from students;	
+select name as 姓名 from students;
+
+delete from students;   -----删除所有数据
+
+alter table students add is_delete bit default 0;	
