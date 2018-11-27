@@ -75,7 +75,6 @@ def main():
         new_socket, client_addr = tcp_server_socket.accept()
         gevent.spawn(service_client, new_socket,)
 
-
     # 关闭监听套接字
     tcp_server_socket.close()
 
