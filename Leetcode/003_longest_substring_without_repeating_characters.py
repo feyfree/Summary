@@ -5,8 +5,6 @@ class Solution:
         :rtype: int
         """
 
-     
-
         #1.建立字典，存入键值对
         tempDict = {}
         #2.初始化
