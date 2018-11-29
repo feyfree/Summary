@@ -303,15 +303,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class User():
     #...
     password_hash = db.Column(db.String(128))
-    
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
-        
+
     @password.setter
     def password(self, password):
         self.password_hash = generate_password_hash(password)
-       
+
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 ```
@@ -346,14 +346,11 @@ def create_app(config_name):
     #...
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix = '/auth')
-    
+
     return app
-    
 ```
 
 创建身份蓝本----------身份验证蓝本中的路由和视图函数-----------注册身份验证蓝本
-
-
 
 #### 20. Flask-Login
 
@@ -395,7 +392,6 @@ def login():
 >>>data = s.loads(token)
 >>>data
 {'confirm': 23}
-
 ```
 
 #### 22. 确认用户的账户
@@ -442,7 +438,59 @@ def permission_required(permission):
             return f(*args, **kwargs)
         return decorated_function
     return decorator
-    
+
 def admin_required(f):
     return permission_required(Permission.ADMIN)(f)
+```
+
+#### 25.再论数据库
+
+多对多关系
+
+```python
+registration = db.Table('registrations', db.Column('student_id', db.Integer, 
+          db.ForeignKey('students.id'), db.Column('class_id', db.Integer, db.ForeignKey('classes.id'))
+
+class Student(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    classes = db.relationship('Class', secondary=registrations, backref=db.backref('students',                            
+        lazy='dynamic'), lazy='dynamic')
+       
+class Class(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+```
+
+多对多关系可以分解成原表和关联表之间的两个一对多关系
+
+多对多关系仍使用定义一对多关系的db.relationship()方法定义，但是在多对多关系中，必须把secondary参数设为关联表。多对多关系可以在任何一个类中定义， backref参数会处理好关系的另一侧。关联表就是一个简单的表，不是模型
+
+##### 高级多对多关系
+
+```python
+#关联表
+class Follow(db.Model):
+    __tablename__ = 'follows'
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+   
+class User(UserMixin, db.Model):
+    #....
+    followed = db.relationship('Follow', foreign_keys=[Follow.follower_id], 
+            backref=db.backref('follower', lazy='joined'), lazy='dynamic', 
+            cascade='all, delete-orphan')
+    followers = db.relationship('Follow', foreign_keys=[Follow.followed_id],
+                backref=db.backref('followed', lazy='joined'), lazy='dynamic',
+                 cascade='all, delete-orphan')
+```
+
+在这段代码中， followed和followers关系都定义为单独的一对多关系。注意，为了消除外键的歧义，定义关系时候必须使用参数foreign_keys指定外键, 而且， db.backref()参数并不是指定两个关系之间的引用关系，而是回引Follow模型
+
+```python
+def is_following(self, user):
+    if user.id is None:
+        return False
+    return self.followed.filter_by(follower_id=user.id).first() is not None
 ```
