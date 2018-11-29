@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Web Page!</title>
+	<style>
+		input[type=text]{
+			background-color: red;
+		}
+		input[type=password]{
+			background-color: blue;
+		}
+	</style>	
+</head>
+<body>
+	<form>
+		<div>
+			<input type="text" name="name" placeholder="Name">
+			<input type="password" name="password" placeholder="Password">
+		</div>
+		<div>
+			Favorite Cilor?
+			<input type="radio" name="color" value="red"> Red
+			<input type="radio" name="color" value="blue"> Blue
+			<input type="radio" name="color" value="green"> Green
+			<input type="radio" name="color" value="other"> Other
+		</div>
+		<div>
+			<input type="" name="country" list="countries" placeholder="Country">
+			<datalist id="countries">
+				<option value="AF"></option>
+				<option value="Av"></option>
+				<option value="Ac"></option>
+				<option value="AFc"></option>
+				<option value="AFcasc"></option>
+				<option value="AFsf"></option>
+				<option value="AFgng"></option>
+			</datalist>
+		</div>
+	</form>
+
+</body>
+</html>
