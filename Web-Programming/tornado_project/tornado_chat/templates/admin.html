@@ -1,0 +1,114 @@
+<html lang="en">
+<heda>
+	<meta charset="utf-8">
+	<title>管理</title>
+	<link rel="stylesheet" class="ui" href="/static/css/semantic.min.css"/>
+    <link rel="stylesheet" class="ui" href="/static/css/body.css"/>
+    <link rel="stylesheet" class="ui" href="/static/css/chat.css"/>
+	<script type="text/javascript">
+
+		function check(username){
+			if (username == null || username == ""){
+				alert("用户名不能为空");
+				return false;
+			}
+			var reg_filter=/^s*[.A-Za-z0-9_-]{4,20}s*$/;
+			if (!reg_filter.test(username)){
+				alert("用户名填写不正确,请重新填写！可使用的字符为（A-Z a-z 0-9 _ - .)长度不小于4个字符，不超过20个字符，注意不要使用空格");
+				return false;
+			}
+			return true;
+		}
+		function vaildateForm1() {
+			var username = document.forms["setVIPForm"]["username"].value;
+			return check(username);
+		}
+		function vaildateForm2() {
+			var username = document.forms["cancelVIPForm"]["username"].value;
+			return check(username);
+		}
+		function vaildateForm3() {
+			var username = document.forms["deleteUserForm"]["username"].value;
+			return check(username);
+		}
+		function validateForm4() {
+			var roomname = document.forms["deleteRoomForm"]["roomname"].value;
+			if (roomname==null || roomname=="")
+				return false;
+			return true;
+		}
+	</script>
+</heda>
+
+<body>
+<div class="ui fixed transparent inverted main menu">
+		<div class="container">
+            <div class="title item">
+                <b>{{cookieUser}}&nbsp</b> 在线聊天系统 
+            </div>
+
+            <div class="right menu">
+                <div class="title item">
+                    {%if usertype == 2%}
+						<b><a href='/admin'>管理</a></b>
+					{%end%}
+					{%if usertype != -1%}
+						&nbsp <b><a href='/create'>创建聊天室</a></b>
+					{%end%}
+                    &nbsp<b><a href="/modify"> 修改个人信息 </a></b>
+                    &nbsp<b><a href="/logout"> 注销 </a></b>
+                </div>
+            </div>
+        </div>
+</div>
+{%if usertype == 2%}
+	<div id="wrapper" style="display: block; z-index: 998;">
+    <div class="container">
+        <div id="login" class="ui two column relaxed grid">
+            <div class="column">
+                <div class="ui fluid form segment">
+                    <h3 class="ui header">管理</h3>
+                  		<form name="setVIPForm"  action="/admin" onsubmit="return vaildateForm1();" method="post">
+							<label>设置用户为VIP</label>
+							<input type="text" name="username1" id="username1" placeholder="用户名">
+							<input type="submit" value="提交" id="submit">
+						</form>
+						<form name="cancelVIPForm" action="/admin" onsubmit="return validateForm2();" method="post">
+							<label>取消用户为vip</label>
+							<input type="text" name="username2" id="username2" placeholder="用户名">
+							<input type="submit" value="提交" id="submit">
+						</form>
+						<form name="deleteUserForm" action="/admin" onsubmit="return validateForm3();" method="post">
+							<label>删除用户</label>
+							<input type="text" name="username3" id="username3" placeholder="用户名">
+							
+							<input type="submit" value="提交" id="submit" >
+						</form>
+						<!-- 删除room功能!-->
+						<form name="deleteRoomForm" action="/admin" onsubmit="return validateForm4();" method="post">
+							<label>删除聊天室</label>
+							<input type="text" name="roomname" id="roomname" placeholder="聊天室名">
+							
+							<input type="submit" value="提交" id="submit" >
+						</form>
+						<a href='/chatroom'>返回聊天室</a>
+				</div>
+    		</div>
+		</div>
+	</div>
+</div>
+{%else%}
+<div id="wrapper" style="display: block; z-index: 998;">
+    <div class="container">
+        <div id="login" class="ui two column relaxed grid">
+            <div class="column">
+                <div class="ui fluid form segment">
+                    <h3 class="ui header">无权限</h3>
+                	<a href='/chatroom'>返回聊天室</a>  
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+{%end%}	
+</body>

@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>登录</title>
+    <link rel="stylesheet" class="ui" href="/static/css/semantic.min.css"/>
+    <link rel="stylesheet" class="ui" href="/static/css/body.css"/>
+    <link rel="stylesheet" class="ui" href="/static/css/chat.css"/>
+
+	<script type="text/javascript">
+		function vaildateForm() {
+			var username = document.forms["loginForm"]["username"].value;
+			var password = document.forms["loginForm"]["password"].value;
+			if (username == null || username == ""){
+				alert("用户名不能为空");
+				return false;
+			}
+			var reg_filter=/^s*[.A-Za-z0-9_-]{4,20}s*$/;
+			if (!reg_filter.test(username)){
+				alert("用户名填写不正确,请重新填写！可使用的字符为（A-Z a-z 0-9 _ - .)长度不小于4个字符，不超过20个字符，注意不要使用空格");
+				return false;
+			}
+			if (password == null || password == ""){
+				alert("密码不能为空");
+				return false;
+			}
+			if (!reg_filter.test(password)){
+				alert("密码填写不正确,请重新填写！可使用的字符为（A-Z a-z 0-9 _ - .)长度不小于4个字符，不超过15个字符，注意不要使用空格");
+				return false;	
+			}
+			return true;
+		}
+	</script>
+</head>
+
+<body>
+	{%if not cookieUser%}
+    {%if Error%}
+    <div id="wrapper" style="display: block; z-index: 998;">
+    <div class="container">
+        <div id="login" class="ui two column relaxed grid">
+            <div class="column">
+                <div class="ui fluid form segment">
+                    <h3 class="ui header">登录失败</h3>
+                        <h4><b>用户名或密码错误</b></h4> <br><br>
+                        <a href='/login'> 返回 </a>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+    {%else%}
+    <div class="ui fixed transparent inverted main menu">
+        <div class="container">
+            <div class="title item">
+                <b>ChatRoom</b> 在线聊天系统
+            </div>
+
+            <div class="right menu">
+                <div class="title item">
+                    From:mikesu
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="wrapper" style="display: block; z-index: 998;">
+    <div class="container">
+        <div id="login" class="ui two column relaxed grid">
+            <div class="column">
+                <div class="ui fluid form segment">
+                    <h3 class="ui header">登录</h3>
+	                   <form name="loginForm"  action="/login" onsubmit="return vaildateForm();" method="post">
+		                    <div class="field">
+                                <label>用户名</label>
+                                <input name="username" id="username" placeholder="用户名" type="text">
+                            </div>
+		                    <div class="field">
+                                <label>密码</label>
+                                <input name="password" id="password" type="password">
+                            </div>
+       	            
+	                        <input type="submit" value="登录" class="ui blue login_submit button" id="submit">
+                            &nbsp &nbsp &nbsp
+		               		 <a href='/register'> 无帐号，请点击注册 </a>
+	                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <footer>
+    <div class="ui divider"></div>
+    <div class="container">
+        <div class="ui divided horizontal footer link list">
+            <a href="https://github.com/suliangxd/ChatRoom" class="item">Github</a>
+            <div class="item">
+                开发者： <a href="http://github.com/suliangxd" target="_blank">mikesu</a>
+            </div>
+        </div>
+    </div>
+    </footer>
+    {%end%}
+	{%else%}
+		<!-- 跳转进入聊天室-->
+		<meta http-equiv="refresh" content="0; /chatroom">
+	{%end%}
+</body>
+</html>
